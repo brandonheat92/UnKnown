@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "GameFramework/Character.h"	
+#include "AbilitySystemInterface.h" 
 #include "UnknownCharacter.generated.h"
 
 UCLASS(config=Game)
-class AUnknownCharacter : public ACharacter
+class AUnknownCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -21,6 +22,14 @@ class AUnknownCharacter : public ACharacter
 public:
 	AUnknownCharacter();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities", meta = (AllowPrivateAccess = "true"))
+		class UAbilitySystemComponent* AbilitySystem;
+
+	UAbilitySystemComponent* GetAbilitySystemComponent() const override //We add this function, overriding it from IAbilitySystemInterface.
+	{
+		return AbilitySystem;
+	};
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -28,6 +37,18 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+	virtual void InitializeAttributes();
+	virtual void GiveAbilities();
+
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
+		TSubclassOf<class UGameplayEffect> DefaultAttributeEffect;
+
+	/*UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
+		TArray<TSubclassOf<class UGASAbility>> DefaultAbilities;*/
 
 protected:
 

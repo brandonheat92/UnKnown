@@ -7,7 +7,9 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
-#include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/SpringArmComponent.h"			 
+#include "AbilitySystemComponent.h"		 
+#include "Net/UnrealNetwork.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AUnknownCharacter
@@ -45,6 +47,10 @@ AUnknownCharacter::AUnknownCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
+	AbilitySystem->SetIsReplicated(true);
+	AbilitySystem->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -73,20 +79,74 @@ void AUnknownCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindTouch(IE_Released, this, &AUnknownCharacter::TouchStopped);
 
 	// VR headset functionality
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AUnknownCharacter::OnResetVR);
+	//PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AUnknownCharacter::OnResetVR);
 }
 
 
-void AUnknownCharacter::OnResetVR()
+void AUnknownCharacter::GiveAbilities()
 {
-	// If Unknown is added to a project via 'Add Feature' in the Unreal Editor the dependency on HeadMountedDisplay in Unknown.Build.cs is not automatically propagated
-	// and a linker error will result.
-	// You will need to either:
-	//		Add "HeadMountedDisplay" to [YourProject].Build.cs PublicDependencyModuleNames in order to build successfully (appropriate if supporting VR).
-	// or:
-	//		Comment or delete the call to ResetOrientationAndPosition below (appropriate if not supporting VR)
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
+	/*if (HasAuthority() && AbilitySystem)
+	{
+		for (TSubclassOf<UGASAbility>& dAbility : DefaultAbilities)
+		{
+			AbilitySystem->GiveAbility(FGameplayAbilitySpec(dAbility, 1,
+				static_cast<int32>(dAbility.GetDefaultObject()->abilityInput), this));
+		}
+	}*/
 }
+
+void AUnknownCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	/*AbilitySystem->InitAbilityActorInfo(this, this);
+
+	InitializeAttributes();
+	GiveAbilities();*/
+}
+
+void AUnknownCharacter::InitializeAttributes()
+{
+	/*if (AbilitySystem && DefaultAttributeEffect)
+	{
+		FGameplayEffectContextHandle effectContext = AbilitySystem->MakeEffectContext();
+		effectContext.AddSourceObject(this);
+
+		FGameplayEffectSpecHandle specHandle = AbilitySystem->MakeOutgoingSpec(DefaultAttributeEffect, 1, effectContext);
+
+		if (specHandle.IsValid())
+		{
+			FActiveGameplayEffectHandle geHandle = AbilitySystem->ApplyGameplayEffectSpecToSelf(*specHandle.Data.Get());
+		}
+
+	}*/
+}
+
+void AUnknownCharacter::OnRep_PlayerState()
+{
+	/*Super::OnRep_PlayerState();
+	AbilitySystem->InitAbilityActorInfo(this, this);
+
+	InitializeAttributes();
+
+	if (AbilitySystem && InputComponent)
+	{
+		const FGameplayAbilityInputBinds Binds("Confirm", "Cancel", "GASAbilityInput",
+			static_cast<int32>(GASAbilityInput::kConfirm), static_cast<int32>(GASAbilityInput::kCancel));
+		AbilitySystem->BindAbilityActivationToInputComponent(InputComponent, Binds);
+	}*/
+}
+
+//void AUnknownCharacter::OnResetVR()
+//{
+//	// If Unknown is added to a project via 'Add Feature' in the Unreal Editor the dependency on HeadMountedDisplay in Unknown.Build.cs is not automatically propagated
+//	// and a linker error will result.
+//	// You will need to either:
+//	//		Add "HeadMountedDisplay" to [YourProject].Build.cs PublicDependencyModuleNames in order to build successfully (appropriate if supporting VR).
+//	// or:
+//	//		Comment or delete the call to ResetOrientationAndPosition below (appropriate if not supporting VR)
+//	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
+//}
 
 void AUnknownCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
