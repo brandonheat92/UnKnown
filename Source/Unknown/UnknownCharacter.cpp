@@ -60,8 +60,8 @@ void AUnknownCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	//PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	//PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AUnknownCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AUnknownCharacter::MoveRight);
@@ -172,6 +172,8 @@ void AUnknownCharacter::LookUpAtRate(float Rate)
 
 void AUnknownCharacter::MoveForward(float Value)
 {
+	if (isHanging)
+		return;
 	if ((Controller != nullptr) && (Value != 0.0f))
 	{
 		// find out which way is forward
@@ -186,6 +188,8 @@ void AUnknownCharacter::MoveForward(float Value)
 
 void AUnknownCharacter::MoveRight(float Value)
 {
+	if (isHanging)
+		return;
 	if ( (Controller != nullptr) && (Value != 0.0f) )
 	{
 		// find out which way is right
