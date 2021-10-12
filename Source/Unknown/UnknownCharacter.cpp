@@ -85,29 +85,29 @@ void AUnknownCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 
 void AUnknownCharacter::GiveAbilities()
 {
-	/*if (HasAuthority() && AbilitySystem)
+	if (HasAuthority() && AbilitySystem)
 	{
-		for (TSubclassOf<UGASAbility>& dAbility : DefaultAbilities)
+		for (TSubclassOf<UBaseGameplayAbility>& dAbility : DefaultAbilities)
 		{
 			AbilitySystem->GiveAbility(FGameplayAbilitySpec(dAbility, 1,
 				static_cast<int32>(dAbility.GetDefaultObject()->abilityInput), this));
 		}
-	}*/
+	}
 }
 
 void AUnknownCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	/*AbilitySystem->InitAbilityActorInfo(this, this);
+	AbilitySystem->InitAbilityActorInfo(this, this);
 
 	InitializeAttributes();
-	GiveAbilities();*/
+	GiveAbilities();
 }
 
 void AUnknownCharacter::InitializeAttributes()
 {
-	/*if (AbilitySystem && DefaultAttributeEffect)
+	if (AbilitySystem && DefaultAttributeEffect)
 	{
 		FGameplayEffectContextHandle effectContext = AbilitySystem->MakeEffectContext();
 		effectContext.AddSourceObject(this);
@@ -119,12 +119,12 @@ void AUnknownCharacter::InitializeAttributes()
 			FActiveGameplayEffectHandle geHandle = AbilitySystem->ApplyGameplayEffectSpecToSelf(*specHandle.Data.Get());
 		}
 
-	}*/
+	}
 }
 
 void AUnknownCharacter::OnRep_PlayerState()
 {
-	/*Super::OnRep_PlayerState();
+	Super::OnRep_PlayerState();
 	AbilitySystem->InitAbilityActorInfo(this, this);
 
 	InitializeAttributes();
@@ -132,9 +132,9 @@ void AUnknownCharacter::OnRep_PlayerState()
 	if (AbilitySystem && InputComponent)
 	{
 		const FGameplayAbilityInputBinds Binds("Confirm", "Cancel", "GASAbilityInput",
-			static_cast<int32>(GASAbilityInput::kConfirm), static_cast<int32>(GASAbilityInput::kCancel));
+			static_cast<int32>(GASAbilityInput::Confirm), static_cast<int32>(GASAbilityInput::Cancel));
 		AbilitySystem->BindAbilityActivationToInputComponent(InputComponent, Binds);
-	}*/
+	}
 }
 
 //void AUnknownCharacter::OnResetVR()

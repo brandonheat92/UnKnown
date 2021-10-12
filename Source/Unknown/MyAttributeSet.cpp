@@ -11,22 +11,16 @@ void UMyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME_CONDITION_NOTIFY(UMyAttributeSet, Speed, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UMyAttributeSet, Health, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UMyAttributeSet, Damage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UMyAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 }
-
-void UMyAttributeSet::OnRep_Speed(const FGameplayAttributeData& OldSpeed)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UMyAttributeSet, Speed, OldSpeed);
-}
-
+														
 void UMyAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UMyAttributeSet, Health, OldHealth);
 }
 
-void UMyAttributeSet::OnRep_Damage(const FGameplayAttributeData& OldDamage)
+void UMyAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UMyAttributeSet, Damage, OldDamage);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMyAttributeSet, Mana, OldMana);
 }

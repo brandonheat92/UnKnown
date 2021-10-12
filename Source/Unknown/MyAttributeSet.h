@@ -26,13 +26,6 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	UPROPERTY(Category = "Abilities | States", EditAnywhere, BlueprintReadWrite, ReplicatedUsing = OnRep_Speed)
-		FGameplayAttributeData Speed;
-	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Speed);
-
-	UFUNCTION()
-		virtual void OnRep_Speed(const FGameplayAttributeData& OldSpeed);
-
 	UPROPERTY(Category = "Abilities | States", EditAnywhere, BlueprintReadWrite, ReplicatedUsing = OnRep_Health)
 		FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Health);
@@ -40,10 +33,10 @@ public:
 	UFUNCTION()
 		virtual void OnRep_Health(const FGameplayAttributeData& OldHealth);
 
-	UPROPERTY(Category = "Abilities | States", EditAnywhere, BlueprintReadWrite, ReplicatedUsing = OnRep_Damage)
-		FGameplayAttributeData Damage;
-	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Damage);
+	UPROPERTY(Category = "Abilities | States", EditAnywhere, BlueprintReadWrite, ReplicatedUsing = OnRep_Mana)
+		FGameplayAttributeData Mana;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Mana);
 
 	UFUNCTION()
-		virtual void OnRep_Damage(const FGameplayAttributeData& OldDamage);
+		virtual void OnRep_Mana(const FGameplayAttributeData& OldMana);
 };

@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Unknown.h"
 #include "GameFramework/Character.h"	
-#include "AbilitySystemInterface.h" 
+#include "AbilitySystemInterface.h"
+#include "BaseGameplayAbility.h"
 #include "UnknownCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -50,8 +52,8 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
 		TSubclassOf<class UGameplayEffect> DefaultAttributeEffect;
 
-	/*UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
-		TArray<TSubclassOf<class UGASAbility>> DefaultAbilities;*/
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
+		TArray<TSubclassOf<class UBaseGameplayAbility>> DefaultAbilities;
 
 protected:
 
