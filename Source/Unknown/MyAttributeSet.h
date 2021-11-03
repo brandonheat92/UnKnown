@@ -17,6 +17,9 @@
 /**
  * 
  */
+ 
+ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHealthChangeDelegate, float, health, float, maxHealth);
+ 
 UCLASS()
 class UNKNOWN_API UMyAttributeSet : public UAttributeSet
 {
@@ -39,4 +42,7 @@ public:
 
 	UFUNCTION()
 		virtual void OnRep_Mana(const FGameplayAttributeData& OldMana);
+
+	void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+	FHealthChangeDelegate OnHealthChange;
 };

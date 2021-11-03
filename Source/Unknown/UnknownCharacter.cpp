@@ -51,6 +51,9 @@ AUnknownCharacter::AUnknownCharacter()
 	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 	AbilitySystem->SetIsReplicated(true);
 	AbilitySystem->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
+	Attributes = CreateDefaultSubobject<UMyAttributeSet>("Attributes");
+
+	Attributes->OnHealthChange.AddDynamic(this, &AUnknownCharacter::OnHealthChange);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -170,9 +173,14 @@ void AUnknownCharacter::LookUpAtRate(float Rate)
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
+void AUnknownCharacter::OnHealthChange(float health, float maxHealth)
+{
+	K2_OnHealthChangeEvent(health, maxHealth);
+}
+
 void AUnknownCharacter::MoveForward(float Value)
 {
-	if (isHanging)
+	if (isHanging || isSurfing)
 		return;
 	if ((Controller != nullptr) && (Value != 0.0f))
 	{
@@ -188,7 +196,7 @@ void AUnknownCharacter::MoveForward(float Value)
 
 void AUnknownCharacter::MoveRight(float Value)
 {
-	if (isHanging)
+	if (isHanging || isSurfing)
 		return;
 	if ( (Controller != nullptr) && (Value != 0.0f) )
 	{

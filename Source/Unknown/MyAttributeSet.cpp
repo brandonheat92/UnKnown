@@ -5,7 +5,10 @@
 #include "Net/UnrealNetwork.h"
 
 UMyAttributeSet::UMyAttributeSet()
-{}
+{
+	
+	
+}
 
 void UMyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -23,4 +26,10 @@ void UMyAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth)
 void UMyAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UMyAttributeSet, Mana, OldMana);
+}
+
+void UMyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
+{
+	//Super::PostGameplayEffectExecute(Data);
+	OnHealthChange.Broadcast(Health.GetCurrentValue(), 100);
 }

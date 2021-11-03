@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"	
 #include "AbilitySystemInterface.h"
 #include "BaseGameplayAbility.h"
+#include "MyAttributeSet.h"
 #include "UnknownCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -26,6 +27,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities", meta = (AllowPrivateAccess = "true"))
 		class UAbilitySystemComponent* AbilitySystem;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Abilities", meta = (AllowPrivateAccess = "true"))
+		class UMyAttributeSet* Attributes;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Surfing")
+		bool	isSurfing;
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override //We add this function, overriding it from IAbilitySystemInterface.
 	{
@@ -54,6 +61,16 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
 		TArray<TSubclassOf<class UBaseGameplayAbility>> DefaultAbilities;
+	
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	/** Returns FollowCamera subobject **/
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	UFUNCTION()
+	void OnHealthChange(float Health, float maxHealth);
+	UFUNCTION(BlueprintImplementableEvent, Category = "UI_Health")
+	void K2_OnHealthChangeEvent(float Health, float maxHealth);
 
 protected:
 
@@ -84,15 +101,10 @@ protected:
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
-protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
 
-public:
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+private:
 };
 
